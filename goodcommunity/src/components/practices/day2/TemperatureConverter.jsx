@@ -44,12 +44,12 @@ const TemperatureConverter = () => {
     const [celsius,setCelsius] = useState('');
 
     // 2. 온도 변경 핸들러  만들기     만들어주세요~!
-    const handleTemperatureChange = ()=>{
-
+    const handleTemperatureChange = (e)=>{
+        setCelsius(e.target.value);
     }
     // 3. 초기화 핸들러 만들기          만들어주세요~!
     const handleReset = () => {
-
+        setCelsius('');
     }
     // 4. 온도에 따른 메시지 조건부 렌더링
     const getTemperatureMessage = () => {
@@ -66,15 +66,15 @@ const TemperatureConverter = () => {
         <div>
             <h2>온도 변환기</h2>
             {/* CelsiusInput */}
-            <CelsiusInput value={} handler={} />
+            <CelsiusInput value={celsius} handler={handleTemperatureChange} />
             {/* FahrenheitDisplay */}
-            <FahrenheitDisplay celsius={} />
+            <FahrenheitDisplay celsius={celsius} />
             {/* KelvinDisplay */}
-            <KelvinDisplay celsius={} />
+            <KelvinDisplay celsius={celsius} />
             {/* 온도 메시지 */}
             {getTemperatureMessage()}
             {/* 초기화 버튼 */}
-            <button onClick={}>
+            <button onClick={handleReset}>
                 초기화
             </button>
         </div>
