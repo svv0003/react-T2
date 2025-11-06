@@ -40,12 +40,13 @@ const Child = () => {
 const Parent = () => {
     // 상태 변수 선언
     const [number, setNumber] = useState(0);
+    const [abc, setABC] = useState(0);
     return (
         // Context 는 값을 1개만 제공할 수 있다.
         // -> 여러 개 제공하고 싶으면 {}, [] 로 묶기
         // 리액트에서 {number, setNumber} 작성하면 아래와 같이 변환됨
         // {"number" : number, "setNumber" : setNumber}
-        <TestContext.Provider value={{number, setNumber}}>
+        <TestContext.Provider value={{number, setNumber,abc, setABC}}>
             <h1>
                 Parent Component :
                 {/* Parent 컴포넌트의 상태값 출력 */}

@@ -16,7 +16,10 @@ import R08_State1 from "./components/R08_State1";
 import State2 from "./components/R09_State2";
 import ParentComponent from "./components/R10_State3";
 import ParentState from "./components/R10_State3_Components/ParentState";
-import Parent from "./components/R12_Context2"; // css 를 얻어오고 아래 작성된 컴포넌트에 적용
+import Parent from "./components/R12_Context2";
+import Effect1 from "./components/R13_Effect1";
+import Effect2 from "./components/R14_Effect2";
+import Effect3 from "./components/R15_Effect3_axios"; // css 를 얻어오고 아래 작성된 컴포넌트에 적용
 /* App 컴포넌트 (최상위 컴포넌트)
 *
 * 보통 맨 최상위 컴포넌트는 function 을 사용하여 최상위임을 표기
@@ -35,9 +38,13 @@ function App() {
    <>
        {/* 반드시 return 에서 시작과 끝을 감싸는 태그 하나 필요*/}
        {/*<ParentComponent />
-       <ParentState />*/}
+       <ParentState />
         <Parent />
 
+       <Effect1/>
+       <Effect2 />
+       */}
+       <Effect3 />
        {/*
        <R08_State1 />
        <State2 init={50} step={10} />
