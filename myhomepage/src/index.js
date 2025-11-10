@@ -8,12 +8,12 @@ import  AuthProvider  from './context/AuthContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        {/* 2. AuthProvider로 앱을 감쌉니다 (로그인 상태 공유)
-        <AuthProvider>*/}
+        {/* 2. AuthProvider로 앱을 감쌉니다 (로그인 상태 공유)*/}
+        <AuthProvider>
             {/* 3. BrowserRouter로 앱을 감쌉니다 (페이지 이동 기능) */}
             <BrowserRouter>
                 <App />
             </BrowserRouter>
-        {/* </AuthProvider>*/}
+        </AuthProvider>
     </React.StrictMode>
 );

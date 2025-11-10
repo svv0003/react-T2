@@ -1,7 +1,8 @@
 // 로그인
 import {useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import {useAuth} from "../context/AuthContext";
 
 // 게시물이나, 회원가입에서 사용하는 방식
 // 단순 로그인과 비밀번호 찾기, 아이디 찾기에서는 지양하는 방식
@@ -75,16 +76,13 @@ const LoginHandleChangeVersion = () => {
 };
 
 const Login = () => {
+    const navigate = useNavigate();
+    const {loginFn} = useAuth(); // 변수명칭 뿐만 아니라 기능 명칭 또한 {} 로 형태로 가져와서 사용
     const [memberEmail, setMemberEmail] = useState('');
     const [memberPassword, setMemberPassword] = useState('');
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
-
-    /**
-     * value onChang 에러 해결
-     * 제출 방지, useEffect 활용해서 backend api post 형태로 연동
-     *
-     */
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         setMessage(''); //이전 오류 메세지 초기화
@@ -93,7 +91,22 @@ const Login = () => {
             setMessage('이메일과 비밀번호를 입력하세요.');
             return; // 돌려보내기
         }
-
+        
+        loginFn(memberEmail,memberPassword)
+            .then(result => {
+                if(result.success){
+                    alert("로그인 성공하였습니다.");
+                    navigate("/");
+                } else{
+                    // 로그인 실패에 대한 메세지 전달
+                    setMessage(result.message);
+                }
+            })
+        
+        
+        
+    /*
+    AuthContext.js 에서 작성한 loginFn 기능 을 사용해서 로그인 기능 사용
         axios.post('http://localhost:8085/api/auth/login',
             {memberEmail,memberPassword},
             {withCredentials:true})
@@ -108,7 +121,7 @@ const Login = () => {
                 console.error("로그인 에러 : ", err);
                 setMessage("로그인 중 오류가 발생했습니다.");
             })
-
+    */
 
 
         ; // session 유지를 위한 쿠키 전송
