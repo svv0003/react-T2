@@ -74,7 +74,7 @@ const AuthProvider = ({children}) => {
     };
 
     const logoutFn = () => {
-        axios.post(API_AUTH_URL+'/logout',
+       return axios.post(API_AUTH_URL+'/logout',
             {},{withCredentials:true}            )
             .then(res => {
                 console.log("로그아웃 응답 : ", res.data);
@@ -84,7 +84,7 @@ const AuthProvider = ({children}) => {
             .catch(err => {
                 console.error("로그아웃 에러 : ", err);
                 return {success: false};
-            })
+            });
     }
     // Context 에 제공할 값들
     const value = {

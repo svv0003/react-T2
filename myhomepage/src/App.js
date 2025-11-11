@@ -17,7 +17,19 @@ import {useAuth} from "./context/AuthContext";
 function App() {
     // AuthContext 에서 만든 컴포넌트
     // 변수이름형태의 데이터만 가져와서 사용하기 {} 표기
-    const {user, isAuthenticated} = useAuth();
+    const {user, isAuthenticated, logoutFn} = useAuth();
+
+    // 로그아웃 처리 기능
+    const handleLogout = () => {
+        logoutFn()                                      // AuthContext 에서 가져온 로그아웃 기능
+            .then(                                      // 로그아웃 백엔드 연결을 성공하고
+                result => {                             // 성공결과로
+                    if(result.success) {                // success 를 전달받으면
+                        alert("로그아웃 되었습니다.");  // 클라이언트에게 로그아웃되었음을 알림
+                    }
+                }
+            )
+    }
     return (
         <div className="App">
             {/* --- 5. 공통 내비게이션 바 --- */}
@@ -33,6 +45,9 @@ function App() {
                         <>
                             <NavLink to="/write">글쓰기</NavLink>
                             <NavLink to="/mypage">마이페이지</NavLink>
+                            <button onClick={handleLogout} className="logout-btn">로그아웃</button>
+
+                            {/* /api/auth/check 에서 로그인 상태가 확인되어야지 표기 */}
                             <span className="user-email">{user?.memberEmail}</span>
                         </>
                     ) :   ( <NavLink to="/login">로그인</NavLink>)
