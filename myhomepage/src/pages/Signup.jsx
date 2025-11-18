@@ -35,36 +35,71 @@ const Signup = () => {
         active:false
     })
     // js 기능 추가
-    const handleSubmit = (e) => {
+    /*
+    동기   : 순차적으로 진행 은행 번호표 와 같이 순서대로.. 진행
+    비동기 : 나중에 결과를 보여줄게 와 같은 약속을 한 상태에서 잠시 대기 상태로 둔 후,
+             완료되면 해당 기능 완성
+             커피 주문 ... 순서대로 나오지 않는 것과 같이 진행
+   대표적으로 .then .catch 가 존재
+        바로바로 js 를 실행하는 것이 아니라 백엔드 작업이 진행될동안 잠시
+        js 상태 멈춘 상태로, 백엔드 결과가 나오면 js 아래 작업 진행
+        결과에 따른 성공 실패 유무 클라이언트에게 전달
+
+   async await 는 then catch 를 더 간략하게 작성하는 방법
+   현재는 제일 많이 사용하는 형식
+       async : 이 기능은 비동기 기능으로 js를 순차적으로 진행하기 보다는
+               백엔드나 기타 기능을 중간중간 진행해야 하는 경우 아래 js 는 잠시 멈추고 기다릴 수 있다.
+       await : 위 작업이 완료되고 결과가 전달될 때 까지 기다리는 상태
+       await 가 작성된 코드 구문이 완료될 때 까지 하위 코드들은 잠시 작업 중단 상태
+    *
+    *
+    * */
+    const handleSubmit = async (e) => {
         // 제출관련 기능 설정
         e.preventDefault(); // 일시정시 제출상태
-
         // 필수 항목 체크
         if(!formData.memberName) {
             alert('이름을 입력해주세요.')
             return; // 돌려보내기 하위기능 작동x
         }
-
         // DB에 저장할 데이터만 전송
         // body 형태로 전달하기
         // requestBody requestParam
         //    body         header
-
         const signupData = {
             memberName:formData.memberName,
             memberEmail:formData.memberEmail,
-            memberPw:formData.memberPw,
+            memberPassword:formData.memberPw,
         }
+        const res = await axios.post("/api/auth/signup",signupData);
+        if(res.data === "success" || res.status === 200) {
+            console.log("res.data   : ",res.data);
+            console.log("res.status : ",res.status);
+            alert('회원가입이 완료되었습니다.');
+            window.location.href="/";
+        }  else if(res.data === "duplicate" )
+             alert("이미 가입된 이메일 입니다.");
+           else
+            alert("회원가입에 실패하였습니다.");
+
 
         // axios.post
-
-        const res = axios.post("/member/signup",signupData);
+        // 백엔드는 무사히 저장되지만 프론트엔드에서 회원가입 실패가 뜬다.
+        // 이를 해결하자
+        // 비동기 vs 동기 무조건 알고있기
+        // async - await : 백엔드 작업이 끝날때까지 기다린 후
+        // 회원가입 결과 여부 확인
+        //아래 코드는 백엔드 응답을 기다리지 않고, 바로 확인해서 회원가입 실패가 뜸
+        /*
+        const res = axios.post("/api/auth/signup",signupData);
 
         if(res.data === "success" || res.status === 200) {
             alert('회원가입이 완료되었씁니다.');
         } else {
             alert("회원가입에 실패하였습니다.");
         }
+
+         */
     }
 
     const handleChange = (e) =>{

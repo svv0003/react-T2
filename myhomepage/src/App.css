@@ -539,3 +539,224 @@ body {
     cursor: not-allowed;
     opacity: 0.7;
 }
+
+
+
+.required {
+    color: #dc3545;
+    margin-right: 4px;
+    font-weight: 700;
+}
+
+.signUp-input-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.signUp-input-area input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.signUp-input-area input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.signUp-input-area button {
+    white-space: nowrap;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    min-width: fit-content;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.signUp-message {
+    display: block;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    color: #666;
+}
+
+.signUp-message.error {
+    color: #dc3545;
+}
+
+.signUp-message.confirm {
+    color: #28a745;
+}
+
+#emailMessage {
+    color: #666;
+}
+
+#authKeyMessage {
+    min-height: 20px;
+}
+
+#pwMessage {
+    color: #666;
+}
+
+#nickMessage {
+    color: #666;
+}
+
+#telMessage {
+    color: #666;
+}
+#sendAuthKeyBtn {
+    background-color: #007bff;
+    color: white;
+}
+
+#sendAuthKeyBtn:hover {
+    background-color: #0056b3;
+}
+
+#checkAuthKeyBtn {
+    background-color: #28a745;
+    color: white;
+}
+
+#checkAuthKeyBtn:hover {
+    background-color: #218838;
+}
+
+#searchAddress {
+    background-color: #6c757d;
+    color: white;
+}
+
+#searchAddress:hover {
+    background-color: #545b62;
+}
+
+#signUpBtn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#signUpBtn:hover {
+    background-color: #0056b3;
+}
+
+#signUpBtn:disabled {
+    background-color: #a0cfff;
+    cursor: not-allowed;
+}
+
+#postcode,
+#address {
+    background-color: #f8f9fa;
+}
+
+#detailAddress {
+    background-color: white;
+}
+
+#authKey {
+    background-color: white;
+}
+
+#memberTel {
+    background-color: white;
+}
+
+.page-container form label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    margin-top: 15px;
+}
+
+.page-container form label:first-of-type {
+    margin-top: 0;
+}
+
+.page-container form .signUp-input-area + .signUp-input-area {
+    margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+    .signUp-input-area {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .signUp-input-area button {
+        width: 100%;
+    }
+
+    #signUpBtn {
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .page-container {
+        padding: 20px;
+    }
+}
+
+.signUp-input-area input.valid {
+    border-color: #28a745;
+}
+
+.signUp-input-area input.invalid {
+    border-color: #dc3545;
+}
+
+button.loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+button.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.signUp-message.timer {
+    color: #ff6b6b;
+    font-weight: 600;
+}
