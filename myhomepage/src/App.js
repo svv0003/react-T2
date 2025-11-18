@@ -15,8 +15,6 @@ import {useAuth} from "./context/AuthContext";
 // 2. useAuth 훅 임포트
 
 function App() {
-    // AuthContext 에서 만든 컴포넌트
-    // 변수이름형태의 데이터만 가져와서 사용하기 {} 표기
     const {user, isAuthenticated, logoutFn} = useAuth();
 
     // 로그아웃 처리 기능
