@@ -36,7 +36,7 @@ const AuthProvider = ({children}) => {
         axios.get(API_AUTH_URL+"/check", {
             withCredentials:true })
             .then(res => {
-                console.log("로그인 상태 확인 응답 : ", res.data);
+            //    console.log("로그인 상태 확인 응답 : ", res.data);
 
                 setUser(res.data.user);
             })

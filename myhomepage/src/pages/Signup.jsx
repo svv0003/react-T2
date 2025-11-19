@@ -107,7 +107,18 @@ const Signup = () => {
                         headers: {'Content-Type': 'application/json'} // 글자형태로 전달설정
                     }
         );
-       if(res.data == 1){
+       /*
+           @Override
+            public String sendMail(String htmlName, String email) {
+            백엔드에서는  String 형태로 자료형을 반환하는데
+            비교는 int 형태로 되어 있어 결과값은 항상 false 가 나옴
+
+            if (res.data == 1){
+
+        */
+        //console.log("응답 데이터 : ",res.data);
+        console.log("응답 상태 : ", res.status);
+       if(res.data && res.data !== null){
            setMessage(prev => ({...prev,authKey: '05:00'}));
            setTimer({min:4, sec:59, active: true});
            alert('인증번호가 발송되었습니다.');
@@ -116,7 +127,26 @@ const Signup = () => {
        }
     }
 
-
+    // async = 중간에 기다림이 있어야하는 기능입니다.
+    // 만약에 await 가 작성되어 있는 구문은 백엔드나 다른 api에서 return 결과가 도착할 때 까지
+    // 하위 js 코드를 실행하지 않고 잠시 기다립니다.
+    // post 에서 url 과 data 는 필수 cookie 나 header 와 같은 속성전달은 선택사항
+    // post("url",{data}) 필수 형태
+    const checkAuthKey = async () => {
+        const r = await  axios.post(
+            '/api/email/checkAuthKey', // 1번 데이터 보낼 백엔드 api endPoint 작성
+            {                        // 2번 어떤 데이터를 백엔드에 어떤 명칭으로 전달할 것인지 작성
+                email:formData.memberEmail,
+                authKey : formData.authKey
+            }                             // header 에 글자형태만 전달한다, 이미지나 파일데이터도 전달한다와 같은 구문을 작성해야할 경우 3번도 필요
+        )
+       // console.log("r.data : ",r.data);
+        if(r.data && r.data !== null) {
+            alert("인증이 완료되었습니다.");
+        } else {
+            alert('인증번호가 일치하지 않습니다.');
+        }
+    }
 
 
 
@@ -214,6 +244,7 @@ const Signup = () => {
 
                 <label htmlFor="memberEmail">
                     <span className="required">*</span> 아이디(이메일)
+                    <span className="signUp-message" id="emailMessage">{message.email}</span>
                 </label>
 
                 <div className="signUp-input-area">
@@ -223,24 +254,43 @@ const Signup = () => {
                            onChange={handleChange}
                            placeholder="아이디(이메일)" maxLength="30"/>
 
-                    <button id="sendAuthKeyBtn" type="button">인증번호 받기</button>
+                    <button id="sendAuthKeyBtn"
+                            onClick={sendAuthKey}
+                            type="button"
+                    >인증번호 받기</button>
                 </div>
 
-                <span className="signUp-message" id="emailMessage">메일을 받을 수 있는 이메일을 입력해주세요.</span>
 
 
                 <label htmlFor="emailCheck">
                     <span className="required">*</span> 인증번호
+                    <span className="signUp-message" id="authKeyMessage">
+                    {timer.active && (
+                        <span style={{color:'red', fontWeight:'bold'}}>
+                            {zeroPlus(timer.min)}:{zeroPlus((timer.sec))}
+                        </span>
+                    )}
+
+                </span>
                 </label>
 
                 <div className="signUp-input-area">
-                    <input type="text" name="authKey" id="authKey" placeholder="인증번호 입력" maxLength="6"
+                    <input type="text"
+                           name="authKey"
+                           id="authKey"
+                           placeholder="인증번호 입력"
+                           value={formData.authKey}
+                           onChange={handleChange}
+                           maxLength="6"
                            autoComplete="off"/>
 
-                    <button id="checkAuthKeyBtn" type="button">인증하기</button>
+                    <button id="checkAuthKeyBtn"
+                            type="button"
+                            onClick={checkAuthKey}
+                    >인증하기</button>
                 </div>
 
-                <span className="signUp-message" id="authKeyMessage"></span>
+
 
                 <label htmlFor="memberPw">
                     <span className="required">*</span> 비밀번호
@@ -264,12 +314,11 @@ const Signup = () => {
                            maxLength="20"/>
                 </div>
 
-                <span className="signUp-message" id="pwMessage">영어,숫자,특수문자(!,@,#,-,_) 6~20글자 사이로 입력해주세요.</span>
+                <span className="signUp-message" id="pwMessage">{message.password}</span>
 
                 <label htmlFor="memberName">
                     <span className="required">*</span> 이름
                 </label>
-
                 <div className="signUp-input-area">
                     <input type="text" name="memberName"
                            value={formData.memberName}
@@ -277,8 +326,7 @@ const Signup = () => {
                            placeholder="이름을 입력하세요."
                            maxLength="5"/>
                 </div>
-
-                <span className="signUp-message" id="nickMessage">한글 2~5글자</span>
+                <span className="signUp-message" id="nickMessage">{message.fullname}</span>
 
 
                 <label htmlFor="memberTel">
