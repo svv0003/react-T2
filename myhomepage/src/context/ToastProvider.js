@@ -50,26 +50,14 @@ const ToastProvider = ({children}) => {
                 setNotifications(p => [...p, newNotification] );
 
                 // 5초 후 자동 삭제
+                /*
                 setTimeout(() => {
                     removeNotification(newNotification.id);
                 },5000);
+
+                 */
             });
         };
-/*
-        client.onConnect = () => {
-            console.log("🎈🎈🎈 웹소켓 연결 성공 🎈🎈🎈");
-            client.subscribe('/topic/notifications', (msg) => {
-                const n = JSON.parse(msg.body);
-                console.log("✨✨✨✨받은 알림✨✨✨ : ",n);
-
-        setNotifications(p => [...p, {
-            id:Date.now(),
-            ...n,
-            read:false
-        }] );
-    });
-};
-*/
         client.onStompError = () => {
             alert("연결 실패");
         };
@@ -82,6 +70,21 @@ const ToastProvider = ({children}) => {
     }, []);
 
 
+    /*
+            client.onConnect = () => {
+                console.log("🎈🎈🎈 웹소켓 연결 성공 🎈🎈🎈");
+                client.subscribe('/topic/notifications', (msg) => {
+                    const n = JSON.parse(msg.body);
+                    console.log("✨✨✨✨받은 알림✨✨✨ : ",n);
+
+            setNotifications(p => [...p, {
+                id:Date.now(),
+                ...n,
+                read:false
+            }] );
+        });
+    };
+    */
     const value = {
         notifications,
         removeNotification,
