@@ -4,8 +4,14 @@ import {useNavigate} from "react-router-dom";
 
 const NotificationToast = () => {
     const { notifications, removeNotification } = useToast();
+
     const navigate = useNavigate();
     const handleNotificationClick = (notification) =>{
+    /*
+    * 과제
+    * 상세보기 떴을 때, 상세보기로 이동하면 게시물이 보이지않는 현상 발생
+    * 해결하여 상세보기를 클릭했을 때, 게시글이 보일 수 있도록 기능 구현
+    */
         // console.log 로 boardId 확인하고 notificationcontroller 와 toast 수정하기
         // 게시물 ID가 있으면 해당 게시물로 이동
         if(notification.boardId) {

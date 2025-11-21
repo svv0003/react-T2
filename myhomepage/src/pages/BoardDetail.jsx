@@ -11,7 +11,7 @@ const BoardDetail = () => {
     useEffect(() => {
         axios.get(`http://localhost:8085/api/board/${id}`)
             .then((res => {
-                console.log(res.data);
+             //   console.log(res.data);
                 setBoard(res.data);
                 // 3. 로딩상태 해지
                 setLoading(false);
