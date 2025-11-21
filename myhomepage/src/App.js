@@ -46,6 +46,7 @@ function App() {
                         <>
                             <NavLink to="/write">글쓰기</NavLink>
                             <NavLink to="/mypage">마이페이지</NavLink>
+                            
                             <button onClick={handleLogout} className="logout-btn">로그아웃</button>
 
                             {/* /api/auth/check 에서 로그인 상태가 확인되어야지 표기 */}
@@ -53,7 +54,6 @@ function App() {
                         </>
                     ) :   ( <NavLink to="/login">로그인</NavLink>)
                     }
-
                 </div>
             </nav>
 
