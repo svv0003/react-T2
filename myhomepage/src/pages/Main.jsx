@@ -44,13 +44,35 @@ const fetchProducts = async () => {
     // 2자리 숫자로 맞출 것인데 하나의 자리만 존재한다면 맨 앞에 0 추가
     // 5월 11일 -> 05월 11일 형태로 자리수를 맞춰 표기
     const today = new Date();
-    const 회사가원하는형식의날짜표현 = `${today.getFullYear()}년
+    const formattedDate = `${today.getFullYear()}년
                 ${String(today.getMonth() + 1).padStart(2,'0')}월
                 ${String(today.getDate()).padStart(2,'0')}일`;
+
+    // 가격 포멧팅
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat("ko-KR").format(price);
+    }
+    // 과제 : 상세보기와 같이 과제 클릭했을 때 이동 설정
+    // 게시글 클릭
+    const handleBoardClick = (boardId) => {};
+    // 상품 클릭
+    const handleProductClick = (productId) => {  };
+
+    if(loading){
+        return (
+            <div className="page-container">
+                <div className="loading-container">
+                    <div className="loading-spinner">
+                        <p>로딩 중 ...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     return(
     <div className="page-container">
         <h1>메인 페이지</h1>
-        <p> {회사가원하는형식의날짜표현} 인기글 목록</p>
+        <p> {formattedDate} 인기글 목록</p>
 
         <ul >
                 {/*
