@@ -47,15 +47,17 @@ const ProductUpload = () => {
     // 폼 제출 핸들러
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    /*
         if(!validateForm()){
             return;
         }
+
+     */
         setLoading(true);
         // 백엔드 연결 시도
         try{
             const r = await  axios.post(
-                '/api/product',product
+                'http://localhost:8085/api/product',product
             );
             if(r.data.success){
                 alert(r.data.message);
