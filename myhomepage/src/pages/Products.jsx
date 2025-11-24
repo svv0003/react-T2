@@ -1,8 +1,113 @@
-
+import {useNavigate} from "react-router-dom";
+import {useEffect, useMemo, useState} from "react";
+import axios from "axios";
 
 
 const Products = () => {
-    return
+    const navigate = useNavigate();
+    const [products, setProducts] = useState([]);
+    const [filterProduct, setFilterProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [selectCategory, setSelectCategory] = useState('전체');
+    const [searchKeyword, setSearchKeyword] = useState('');
+
+    const categories = ["전체","전자기기","의류","식품","도서","생활용품","기타"];
+
+
+    useEffect(() => {
+        fetchProduct();
+    }, []);
+
+    useEffect(() => {
+        filterProducts();
+    }, [selectCategory, searchKeyword, products]);
+
+    const fetchProduct = async () => {
+        try {
+            const res = await axios.get("http://localhost:8085/api/product/all");
+            setProducts(res.data);
+            setFilterProduct(res.data);
+        } catch (error) {
+            alert("상품 목록을 불러올 수 없습니다.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const filterProducts = async () => {
+        // products 를 spread 이용해서 배열 복제
+        let filtered = [];
+
+        // 카테고리 필터
+
+        // 검색필터 = 양옆 공백제외
+
+        // 카테고리나, 검색된 filtered 를 setter 이용해서 filterProduct 에 저장
+
+    };
+
+    const handleSearch = (e)=>{
+        e.preventDefault();
+        filterProducts();
+    }
+
+    const handleProductClick = (id) => {
+        navigate(`/product/${id}`);
+    }
+
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat("ko-KR").format(price);
+    }
+    if(loading){
+        return(
+            <div className="page-container">
+                <div className="loading-container">
+                    <div className="loading-spinner">
+                        <p>로딩중</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    return (
+        <div className="page-container product-list-container">
+            <div className="product-header">
+                <h2>상품 목록</h2>
+                <button className="btn-add-product"
+                        onClick={() => navigate(`/product/upload}`)}>
+                   + 상품등록
+                </button>
+            </div>
+
+            {/* 카테고리 필터 */}
+            <div className="category-filter">
+                {categories.map((c) => (
+                    <button
+                    key={c}
+                    className={`category-btn ${selectCategory} === c ? "active" : ""}`}
+                    onClick={() => setSelectCategory(c)}>
+                        {c}
+                    </button>
+                ))}
+            </div>
+
+            {/*  검색 박스  */}
+            <form className="search-box" onSubmit={handleSearch}>
+                <input
+                type="text"
+                placeholder="상품명, 상품코드, 제조사로 검색"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                />
+                <button>검색</button>
+            </form>
+
+            {/* 상품 개수 */}
+            <div className="product-count">
+                총 <strong>{filterProduct.length}</strong>개의 상품
+            </div>
+        </div>
+    )
 }
 
 export  default Products;

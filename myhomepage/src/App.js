@@ -42,6 +42,7 @@ function App() {
                 <div className="nav-links">
                     <NavLink to="/">메인</NavLink>
                     <NavLink to="/board">게시판</NavLink>
+                    <NavLink to="/products">상품</NavLink>
 
 
                     {/* 로그인 상태에 따라 다른 메뉴 표시 */}
@@ -70,9 +71,11 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/write" element={<Write />} />
-                <Route path="/upload" element={<ProductUpload />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/products" element={<Products />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/upload" element={<ProductUpload />} />
+
+
             </Routes>
 
             {/* 공통 푸터 - 모든 페이지에 보이는 footer 작성 */}
