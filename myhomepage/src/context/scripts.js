@@ -40,6 +40,41 @@ export const withLoading = async (abc, setLoading) => {
     }
 }
 // 연희 : 네비게이트
+// ========== 네비게이트 관련 함수 ==========
+// 게시글 상세보기로 이동
+/*
+goToPage 하나면 navigateToBoard navigateToProduct 필요하지 않는다.
+export  const navigateToBoard = (navigate, boardId) => {
+    navigate(`/board/${boardId}`);
+}
+
+export  const navigateToProduct = (navigate, productId) => {
+    navigate(`/product/${productId}`);
+}
+
+//  navigateToBoard navigateToProduct goToPage 만 있으면 필요 없음
+*/
+export  const goToPage = (navigate, path) => {
+    navigate(path);
+}
+
+
+
+export  const goBack = (navigate, confirmMessage = null) => {
+    if(confirmMessage) {
+        if(window.confirm(confirmMessage))  navigate(-1);
+    } else  navigate(-1);
+}
+
+
+
+
+
+
+
+
+
+
 // 유성 : fetchProduct
 // 세원 : 날짜포멧팅
 // 윤선 : 가격포멧팅
