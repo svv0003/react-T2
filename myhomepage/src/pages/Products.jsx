@@ -59,15 +59,7 @@ const Products = () => {
         return new Intl.NumberFormat("ko-KR").format(price);
     }
     if(loading){
-        return(
-            <div className="page-container">
-                <div className="loading-container">
-                    <div className="loading-spinner">
-                        <p>로딩중</p>
-                    </div>
-                </div>
-            </div>
-        );
+
     }
     return (
         <div className="page-container product-list-container">

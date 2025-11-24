@@ -59,7 +59,7 @@ const fetchProducts = async () => {
         navigate(`/board/${id}`);
     }
     // 상품 클릭
-    const handleProductClick = (productId) => {  navigate(`/board/${productId}`);};
+    const handleProductClick = (productId) => {  navigate(`/product/${productId}`);};
 
     if(loading){
         return (
@@ -142,7 +142,7 @@ const fetchProducts = async () => {
                     ))}
                 </ul>
             ): (
-                <p className="no-data">인기글이 없습니다.</p>
+                <p className="no-data">제품이 없습니다.</p>
             )}
         </section>
 
