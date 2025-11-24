@@ -106,6 +106,47 @@ const Products = () => {
             <div className="product-count">
                 총 <strong>{filterProduct.length}</strong>개의 상품
             </div>
+
+            {/* 상품 목록*/}
+            {filterProduct.length > 0 ?(
+                <div className="product-grid">
+                    {filterProduct.map((product) => (
+                        <div key={product.id}
+                        className="product-card"
+                        onClick={() => handleProductClick(product.id)}>
+                            <div className="product-image">
+                                {product.imageUrl ? (
+                                    <img src={product.imageUrl} alt={product.productName} />
+                                ) : (
+                                    <img src="/static/img/default.png" alt="default" />
+                                )}
+                            </div>
+                            <div className="product-info">
+                                <span className="product-category">{product.category}</span>
+                                <h3 className="product-name">
+                                    {product.productName}
+                                </h3>
+                                <p className="product-code">
+                                    {product.productCode}
+                                </p>
+                                <p className="product-manufacturer">
+                                    {product.manufacturer}
+                                </p>
+                                <div className="product-footer">
+                                    <span className="product-price">
+                                        {formatPrice(product.price)}원
+                                    </span>
+                                    <span className={`product-stock ${product.stock < 10 ? "매진임박" :""}`}></span>
+                                </div>
+                            </div>
+                        </div>
+            ))}
+                </div>
+                ):(
+                    <div className="no-products">
+                        <p>등록된 상품이 없습니다.</p>
+                    </div>
+                )}
         </div>
     )
 }
