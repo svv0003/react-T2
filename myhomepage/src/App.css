@@ -1171,10 +1171,16 @@ button.loading::after {
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100%;
+    height: 200px;
     background: #ecf0f1;
     color: #95a5a6;
     font-size: 14px;
+    object-fit: contain;
+}
+.no-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .product-info {
@@ -1418,7 +1424,7 @@ button.loading::after {
 
 .main-product-image {
     width: 100%;
-    height: 150px;
+    height: 200px;
     background: #f8f9fa;
     display: flex;
     align-items: center;
@@ -1429,7 +1435,7 @@ button.loading::after {
 .main-product-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .main-product-info {
@@ -1515,5 +1521,209 @@ button.loading::after {
 @media (max-width: 480px) {
     .main-product-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+
+/****************************
+    제품 상세보기 css
+**************************** */
+.product-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.btn-back {
+    background: #95a5a6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.btn-back:hover {
+    background: #7f8c8d;
+}
+
+.product-detail-container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 40px;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.product-detail-image {
+    width: 100%;
+    height: 400px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-detail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.product-detail-category {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #e8f4f8;
+    color: #3498db;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.product-detail-name {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.product-detail-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.meta-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.meta-label {
+    font-size: 14px;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.meta-value {
+    font-size: 15px;
+    color: #333;
+    font-weight: 600;
+}
+
+.meta-value.low-stock {
+    color: #e74c3c;
+}
+
+.product-detail-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+    background: #fff5f5;
+    border: 2px solid #e74c3c;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.price-label {
+    font-size: 16px;
+    color: #555;
+    font-weight: 600;
+}
+
+.price-value {
+    font-size: 32px;
+    color: #e74c3c;
+    font-weight: 700;
+}
+
+.product-detail-description {
+    margin-bottom: 30px;
+}
+
+.product-detail-description h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.product-detail-description p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+.product-detail-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit,
+.btn-delete {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-edit {
+    background: #3498db;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #2980b9;
+}
+
+.btn-delete {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #c0392b;
+}
+
+@media (max-width: 768px) {
+    .product-detail-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .product-detail-image {
+        height: 300px;
+    }
+
+    .product-detail-name {
+        font-size: 22px;
+    }
+
+    .price-value {
+        font-size: 26px;
+    }
+
+    .product-detail-buttons {
+        flex-direction: column;
     }
 }

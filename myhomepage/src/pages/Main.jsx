@@ -18,6 +18,7 @@ const Main = () => {
 const fetchProducts = async () => {
         try{
             const r=  await  axios.get("http://localhost:8085/api/product/all");
+            console.log("productAll" , r.data);
             setProducts(r.data);
         } catch (err) {
             alert("데이터를 백엔드에서 가져올 수 없습니다.")
@@ -54,9 +55,11 @@ const fetchProducts = async () => {
     }
     // 과제 : 상세보기와 같이 과제 클릭했을 때 이동 설정
     // 게시글 클릭
-    const handleBoardClick = (boardId) => {};
+    const handleIDClick = (id) => {
+        navigate(`/board/${id}`);
+    }
     // 상품 클릭
-    const handleProductClick = (productId) => {  };
+    const handleProductClick = (productId) => {  navigate(`/board/${productId}`);};
 
     if(loading){
         return (
@@ -89,7 +92,7 @@ const fetchProducts = async () => {
                     {boards.map((board) => (
                         <li key={board.id}
                             className="board-item"
-                            onClick={() => handleBoardClick(board.id)}
+                            onClick={() => handleIDClick(board.id)}
                         >
                             <span className="board-title">{board.title}</span>
                             <div className="board-meta">
@@ -131,7 +134,7 @@ const fetchProducts = async () => {
                                     />
                                 ):(
                                     <div className="no-image">
-                                        <span>이미지 없음</span>
+                                       <img src="/static/img/default.png" alt="default"/>
                                     </div>
                                 )}
                             </div>

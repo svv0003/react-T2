@@ -11,6 +11,8 @@ import BoardDetail from "./pages/BoardDetail";
 import {useAuth} from "./context/AuthContext";
 import NotificationToast from "./components/NotificationToast";
 import ProductUpload from "./pages/ProductUpload";
+import ProductDetail from "./pages/ProductDetail";
+import Products from "./pages/Products";
 // 단순히 가져와서 적용할 때는 from 생략
 // 1. 라우팅에 필요한 컴포넌트 임포트
 //    공통 스타일 임포트
@@ -69,6 +71,8 @@ function App() {
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/write" element={<Write />} />
                 <Route path="/upload" element={<ProductUpload />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/products" element={<Products />} />
             </Routes>
 
             {/* 공통 푸터 - 모든 페이지에 보이는 footer 작성 */}
