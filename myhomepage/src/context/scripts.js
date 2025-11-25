@@ -4,7 +4,6 @@
 
 // 기능을 나눌 때 여러 ui 태그에서 반복적으로 사용하는 기능인가?
 
-// 기태 : 로딩 기능
 // ========== 로딩 관련 함수 ==========
 export  const renderLoading = (message = '로딩중') => {
     return(
@@ -38,9 +37,6 @@ export const withLoading = async (abc, setLoading) => {
         if(setLoading) setLoading(false);
     }
 }
-// 연희 : 네비게이트
-// ========== 네비게이트 관련 함수 ==========
-// 게시글 상세보기로 이동
 /*
 goToPage 하나면 navigateToBoard navigateToProduct 필요하지 않는다.
 export  const navigateToBoard = (navigate, boardId) => {
@@ -66,15 +62,6 @@ export  const goBack = (navigate, confirmMessage = null) => {
 }
 
 
-
-
-
-
-
-
-
-
-// 유성 : fetchProduct
 // ========== API 데이터 페칭 관련 함수 ==========
 /*
 const API_URL 의 경우 내부에서만 사용할 수 있도록 설정된 상태
@@ -93,6 +80,13 @@ export const API_URLS = {
     PRODUCT :`${API_URL}/api/product`,
     EMAIL :`${API_URL}/api/email`
 }
+/**
+ *
+ * @param axios
+ * @param setProducts
+ * @param setLoading
+ * @returns {Promise<void>}
+ */
 export  const fetchAllProducts= async (axios, setProducts, setLoading= null) => {
     try{
         const res = await axios.get(`${API_URLS.PRODUCT}/all`);
@@ -103,6 +97,15 @@ export  const fetchAllProducts= async (axios, setProducts, setLoading= null) => 
         if(setLoading) setLoading(false);
     }
 }
+/**
+ *
+ * @param axios
+ * @param id
+ * @param setProduct
+ * @param navigate
+ * @param setLoading
+ * @returns {Promise<void>}
+ */
 export  const fetchProductDetail= async (axios, id, setProduct, navigate, setLoading= null) => {
     try{
         const res = await axios.get(`${API_URLS.PRODUCT}/${id}`);
@@ -114,7 +117,13 @@ export  const fetchProductDetail= async (axios, id, setProduct, navigate, setLoa
         if(setLoading) setLoading(false);
     }
 }
-
+/**
+ *
+ * @param axios
+ * @param id
+ * @param navigate
+ * @returns {Promise<void>}
+ */
 export  const deleteProduct= async (axios, id, navigate) => {
     try{
         const res = await axios.delete(`${API_URLS.PRODUCT}/${id}`);
@@ -126,9 +135,13 @@ export  const deleteProduct= async (axios, id, navigate) => {
 }
 
 
-
-
-
+/**
+ *
+ * @param axios
+ * @param setBoards
+ * @param setLoading
+ * @returns {Promise<void>}
+ */
 export  const fetchAllBoards = async (axios, setBoards, setLoading= null) => {
     try{
         const res = await axios.get(`${API_URLS.BOARD}/all`);
@@ -139,7 +152,13 @@ export  const fetchAllBoards = async (axios, setBoards, setLoading= null) => {
         if(setLoading) setLoading(false);
     }
 }
-
+/**
+ *
+ * @param axios
+ * @param setBoards
+ * @param setLoading
+ * @returns {Promise<void>}
+ */
 export  const fetchAllPopularBoards = async (axios, setBoards, setLoading= null) => {
     try{
         const res = await axios.get(`${API_URLS.BOARD}/popular`);
@@ -152,7 +171,15 @@ export  const fetchAllPopularBoards = async (axios, setBoards, setLoading= null)
 }
 
 
-
+/**
+ *
+ * @param axios
+ * @param id
+ * @param setBoard
+ * @param navigate
+ * @param setLoading
+ * @returns {Promise<void>}
+ */
 export  const fetchBoardDetail= async (axios, id, setBoard, navigate, setLoading= null) => {
     try{
         const res = await axios.get(`${API_URLS.BOARD}/${id}`);
@@ -165,7 +192,29 @@ export  const fetchBoardDetail= async (axios, id, setBoard, navigate, setLoading
     }
 }
 
-// 세원 : 날짜포멧팅
+export  const boardSave = async (axios, formData, navigate) => {
+
+    try{
+        const res = await axios.post(`${API_URLS.BOARD}`,formData);
+        alert("글이 성공적으로 작성되었습니다.");
+        navigate("/board");
+        return res;
+
+    } catch (error) {
+        alert("글 작성 중 문제가 발생했습니다.");
+        console.error(error);
+        throw error;
+    }
+}
+
+
+
+
+/**
+ *
+ * @param dateString
+ * @returns {string}
+ */
 export const formatDate = (dateString) => {
     if(!dateString) return '-';
     const date = new Date(dateString);
@@ -176,7 +225,11 @@ export const formatDate = (dateString) => {
     });
 };
 
-// 윤선 : 가격포멧팅
+/**
+ *
+ * @param price
+ * @returns {string}
+ */
 export const formatPrice = (price) => {
     return new Intl.NumberFormat("ko-KR").format(price);
 }

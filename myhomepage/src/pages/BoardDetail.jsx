@@ -15,16 +15,18 @@ const BoardDetail = () => {
     }, [id]);
 
     // 로딩중 일 때
-    if(loading)  return renderLoading('게시물을 불러오는 중');
+    if (loading) return renderLoading('게시물을 불러오는 중');
 
-    if(!board) {
+    if (!board) {
         renderLoading('게시물을 찾을 수 없습니다.');
         goToPage(navigate, "/board");
     }
 
     return (
         <div className="page-container">
-            <h1 className="board-detail-title">{board.title}</h1>
+            <h1 className="board-detail-title">
+                {board.title}
+            </h1>
             <div className="board-detail-info">
                 <span>작성자 : {board.writer}</span>
                 <span>조회수 : {board.viewCount}</span>
@@ -33,7 +35,11 @@ const BoardDetail = () => {
             <div className="board-detail-content">
                 {board.content}
             </div>
-            <button className="button" onClick={() => goToPage(navigate, '/board')}>
+            <button className="button"
+                    onClick={
+                        () => goToPage(navigate, '/board')
+                    }
+            >
                 목록으로
             </button>
         </div>
