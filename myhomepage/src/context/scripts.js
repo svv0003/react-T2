@@ -114,6 +114,21 @@ export  const fetchProductDetail= async (axios, id, setProduct, navigate, setLoa
         if(setLoading) setLoading(false);
     }
 }
+
+export  const deleteProduct= async (axios, id, navigate) => {
+    try{
+        const res = await axios.delete(`${API_URLS.PRODUCT}/${id}`);
+        alert("상품이 삭제되었습니다.");
+        navigate("/products");
+    } catch (error) {
+        alert("상품 삭제에 실패했습니다.")
+    }
+}
+
+
+
+
+
 export  const fetchAllBoards = async (axios, setBoards, setLoading= null) => {
     try{
         const res = await axios.get(`${API_URLS.BOARD}/all`);
@@ -151,6 +166,15 @@ export  const fetchBoardDetail= async (axios, id, setBoard, navigate, setLoading
 }
 
 // 세원 : 날짜포멧팅
+export const formatDate = (dateString) => {
+    if(!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month:'long',
+        date: 'numeric'
+    });
+};
 
 // 윤선 : 가격포멧팅
 export const formatPrice = (price) => {
