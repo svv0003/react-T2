@@ -32,17 +32,7 @@ const Main = () => {
     // 상품 클릭
     const handleProductClick = (productId) => {  navigate(`/product/${productId}`);};
 
-    if(loading){
-        return (
-            <div className="page-container">
-                <div className="loading-container">
-                    <div className="loading-spinner">
-                        <p>로딩 중 ...</p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+
     return(
     <div className="page-container">
         <h1>메인 페이지</h1>

@@ -76,8 +76,18 @@ export  const goBack = (navigate, confirmMessage = null) => {
 
 // 유성 : fetchProduct
 // ========== API 데이터 페칭 관련 함수 ==========
+/*
+const API_URL 의 경우 내부에서만 사용할 수 있도록 설정된 상태
+외부에서 사용 가능한 형태로 변경하길 원한다면
+export const API_URL 로 export를 추가하면 된다.
+
+export const API_URLS의 경우 외부 내부 어디서든 활용 가능하도록 설정
+내부에서만 사용 가능한 형태로 변경하길 원한다면
+export 를 제거한다.
+* */
 const API_URL = 'http://localhost:8085'
-export  const API_URLS = {
+
+export const API_URLS = {
     AUTH :`${API_URL}/api/auth`,
     BOARD :`${API_URL}/api/board`,
     PRODUCT :`${API_URL}/api/product`,
@@ -106,11 +116,11 @@ export  const fetchProductDetail= async (axios, id, setProduct, navigate, setLoa
 }
 export  const fetchAllBoards = async (axios, setBoards, setLoading= null) => {
     try{
+        const res = await axios.get(`${API_URLS.BOARD}/all`);
+        setBoards(res.data);
     } catch (error) {
         alert("데이터를 가져올 수  없습니다.");
-    } finally {        const res = await axios.get(`${API_URLS.BOARD}/all`);
-        setBoards(res.data);
-
+    } finally {
         if(setLoading) setLoading(false);
     }
 }
@@ -141,7 +151,11 @@ export  const fetchBoardDetail= async (axios, id, setBoard, navigate, setLoading
 }
 
 // 세원 : 날짜포멧팅
+
 // 윤선 : 가격포멧팅
+export const formatPrice = (price) => {
+    return new Intl.NumberFormat("ko-KR").format(price);
+}
 // 형빈 : 카테고리
 
 
