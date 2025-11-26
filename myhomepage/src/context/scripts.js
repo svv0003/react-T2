@@ -233,6 +233,18 @@ export const formatDate = (dateString) => {
 export const formatPrice = (price) => {
     return new Intl.NumberFormat("ko-KR").format(price);
 }
+
+
+export const handleInputChange = (e, setFormData) => {
+    const { name, value } = e.target;
+    setFormData(p => ({
+        ...p,
+        [name]: value
+    }))
+}
+
+
+
 // 형빈 : 카테고리
 
 

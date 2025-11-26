@@ -1,41 +1,9 @@
 import {useNavigate} from "react-router-dom";
 import {useContext, useState} from "react";
 import {useAuth} from "../context/AuthContext";
+import {handleChange, handleInputChange} from "../context/scripts";
 /*
 과제 1: 새로 작성한 비밀번호와 비밀번호 확인이 일치하는지 여부 기능 완성
-과제 2: 핸드폰번호 css 다른 input 창과 동일하게 스타일 작성
-과제 3: 참고해서 주소검색 창 띄우기
-
-function daumPostCode(){
-    new daum.Postcode({
-        oncomplete: function (data) {
-            var addr = '';
-
-            // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-            if( data.userSelectedType === 'R') { //사용자가 도로명 주소를 사용할 경우 Road
-                addr = data.roadAddress;
-            } else { // === 'J' Jibun 을 선택했을 경우 지번주소를 가져온다.
-                addr = data.jibunAddress;
-            }
-
-            document.getElementById('postcode').value = data.zonecode;
-            document.getElementById('address').value = addr;
-            document.getElementById("detailAddress").focus();
-        }
-    }).open();
-}
-document.querySelector("#searchAddress").addEventListener("click",daumPostCode);
-            <label for="memberAddress">주소</label>
-            <div class="signUp-input-area">
-                <input type="text" name="memberAddress" placeholder="우편번호" maxlength="6" id="postcode">
-                <button type="button" id="searchAddress">검색</button>
-            </div>
-            <div class="signUp-input-area">
-                <input type="text" name="memberAddress" placeholder="도로명/지번 주소" id="address">
-            </div>
-            <div class="signUp-input-area">
-                <input type="text" name="memberAddress" placeholder="상세 주소" id="detailAddress">
-            </div>
 */
 const MyPageEdit = () => {
     const navigate = useNavigate();
@@ -45,7 +13,9 @@ const MyPageEdit = () => {
         memberName: '',
         memberEmail: '',
         memberPhone: '',
+        memberPostCode:'',
         memberAddress: '',
+        memberDetailAddress: '',
         newPassword: '',
         currentPassword: '',
         confirmPassword: '',
@@ -68,8 +38,20 @@ const MyPageEdit = () => {
         e.preventDefault();
 
     }
-    const handleChange = () => {
-
+    /*
+    업로드, 업데이트 와 같은 모든 사이트에서 활용하는 공통 기능
+    scripts.js 이동하여 상태관리를 진행하고 재사용
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(p => ({
+            ...p,
+            [name]: value
+        }))
+    }
+    */
+    const handleCheckChange = (e) => {
+       // const {name, value} = e.target;
+        handleInputChange(e, setFormData);
     }
 
     const handleAddressSearch = () => {
@@ -77,16 +59,29 @@ const MyPageEdit = () => {
             oncomplete: function (data) {
                 var addr = '';
 
-                // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                if( data.userSelectedType === 'R') { //사용자가 도로명 주소를 사용할 경우 Road
+                if( data.userSelectedType === 'R') {
                     addr = data.roadAddress;
-                } else { // === 'J' Jibun 을 선택했을 경우 지번주소를 가져온다.
+                } else {
                     addr = data.jibunAddress;
                 }
 
-                document.getElementById('postcode').value = data.zonecode;
-                document.getElementById('address').value = addr;
-                document.getElementById("detailAddress").focus();
+                setFormData(p => ({
+                    ...p,
+                    memberPostCode : data.zonecode,
+                    memberAddress: addr
+                }))
+
+             /*
+              코드를
+              document.getElementById('postcode').value = data.zonecode;
+              document.getElementById('address').value = addr;
+              리액트에서는
+              memberPostCode : data.zonecode,
+              memberAddress: addr
+                    사용한다.
+
+              */
+                document.getElementById("detailAddress")?.focus();
             }
         }).open();
     }
@@ -121,11 +116,19 @@ const MyPageEdit = () => {
                     <span className="form-hint">이메일은 변경할 수 없습니다.</span>
                 </label>
                 <label>
+                    {/*
+                    type = number
+                    int byte short long 과 같은 숫자계열은
+                    맨 앞에 있는 0을 생략한 상태로 값을 저장하기 때문에
+                    주민등록번호에서 00년생 ~ 09년생의 경우 앞에 있는 0이 자동으로 새략
+
+
+                    */}
                     <span className="required">*</span>핸드폰 번호
-                    <input type="number"
+                    <input type="text"
                            name="memberPhone"
                            value={user?.memberPhone}
-                           onChange={handleChange}
+                           onChange={handleCheckChange}
 
                     />
                 </label>
@@ -134,7 +137,7 @@ const MyPageEdit = () => {
                     <input type="text"
                            name="currentPassword"
                            value={formData.currentPassword}
-                           onChange={handleChange}
+                           onChange={handleCheckChange}
                     />
                     <span className="form-hint">비밀번호를 변경하지 않으려면 비워두세요.</span>
                 </label>
@@ -143,7 +146,7 @@ const MyPageEdit = () => {
                     <input type="text"
                            name="newPassword"
                            value={formData.newPassword}
-                           onChange={handleChange}
+                           onChange={handleCheckChange}
                            placeholder="영어, 숫자 포함 8자 이상"
                     />
                 </label>
@@ -152,7 +155,7 @@ const MyPageEdit = () => {
                     <input type="text"
                            name="confirmPassword"
                            value={formData.confirmPassword}
-                           onChange={handleChange}
+                           onChange={handleCheckChange}
                     />
                     <span className={`signUp-message ${validation.confirmPassword && formData.confirmPassword ? 'confirm' :'error' } `}>
                         {messages.confirmPassword}
@@ -165,6 +168,8 @@ const MyPageEdit = () => {
                                id="memberPostCode"
                                name="memberPostCode"
                                value={formData.memberAddress}
+                               placeholder="주소 검색을 클릭하세요"
+                               onClick={handleAddressSearch}
                                readOnly
                         />
                         <button
@@ -173,7 +178,24 @@ const MyPageEdit = () => {
                             주소검색
                         </button>
                     </div>
-                    
+                    <div className="signUp-input-area">
+                        <input type="text"
+                               id="memberAddress"
+                               name="memberAddress"
+                               value={formData.memberAddress}
+                               placeholder="도로명/지번 주소"
+                               onClick={handleAddressSearch}
+                               readOnly />
+                    </div>
+                    <div className="signUp-input-area">
+                        <input type="text"
+                               id="memberDetailAddress"
+                               name="memberDetailAddress"
+                               value={formData.memberDetailAddress}
+                               placeholder="상세 주소를 입력하세요."
+                               onChange={handleCheckChange}
+                               required />
+                    </div>
                    
                 </label>
                 <div className="form-buttons">
