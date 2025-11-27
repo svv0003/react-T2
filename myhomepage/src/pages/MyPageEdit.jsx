@@ -217,6 +217,27 @@ const MyPageEdit = () => {
         <div className="page-container">
             <h1>회원정보 수정</h1>
             <form onSubmit={handleSubmit}>
+                <div className="profile-image-section">
+                    <label>프로필 이미지</label>
+                    <div className="profile-image-container" onClick={handleProfileClick}>
+                        <img src={profileImage}
+                             className="profile-image"
+                        />
+                        <div className="profile-image-overlay">
+                            {isUploading ? "업로드 중..." : '이미지 변경'}
+                        </div>
+                    </div>
+                    <input type="file" ref={fileInputRef}
+                           onChange={handleProfileChange}
+                           accept="image/*"
+                           style={{ display: 'none' }}
+                    />
+                    <span className="form-hint">이미지를 클릭하여 변경할 수 있습니다.(최대 5MB)</span>
+                </div>
+
+
+
+
                 {/* 이름 / 이메일 ( 읽기 전용) 수정 불가 */}
                 <label>
                     <span className="required">*</span>이름
