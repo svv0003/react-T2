@@ -99,9 +99,13 @@ const Signup = () => {
     // 인증키와 관련된 백엔드 기능을 수행하고, 수행한 결과를 표기 하기 위하여
     // 백엔드가 실행되고, 실행된 결과를 res.status 형태로 반환하기 전까지 js 하위기능 잠시 멈춤 처리
     const sendAuthKey = async  () => {
+        if(!formData.memberEmail || formData.memberEmail.trim().length == 0) {
+            alert("이메일을 작성해주세요.");
+            return;
+        }
         // 기존 인증실패해서 0분 0초인 상태를 4분 59초 형태로 변환하기
         clearInterval(timerRef.current);
-        setTimer({min:4, sec:59, active:false});
+        setTimer({min:4, sec:59, active:true});
         // 백엔드 응답 결과를 res 라는 변수이름에 담아두기
        const res =  await  axios.post('/api/email/signup',
                             formData.memberEmail,
@@ -122,7 +126,7 @@ const Signup = () => {
         //console.log("응답 상태 : ", res.status);
        if(res.data === 1 ){
            setMessage(prev => ({...prev,authKey: '05:00'}));
-           setTimer({min:4, sec:59, active: true});
+          // setTimer({min:4, sec:59, active: true});
            alert('인증번호가 발송되었습니다.');
        } else {
            alert('인증번호 발송 중 오류가 발생했습니다.');

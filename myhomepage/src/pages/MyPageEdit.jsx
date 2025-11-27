@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useAuth} from "../context/AuthContext";
-import {handleChange, handleInputChange} from "../service/commonService";
+import {handleInputChange} from "../service/commonService";
 import {fetchMypageEdit} from "../service/ApiService";
 import axios from "axios";
 /*
@@ -10,6 +10,9 @@ import axios from "axios";
 const MyPageEdit = () => {
     const navigate = useNavigate();
     const {user, isAuthenticated} = useAuth();
+    // 페이지 리랜더링이 될 때 현재 데이터를 그대로 유지하기위해 사용
+    // 새로고침되어도 초기값으로 돌아가는 것이 아니라 현재 상태를 그대로 유지
+    const fileInputRef = useRef(null);
     useEffect(() => {
         if(!isAuthenticated) {
             navigate("/login");
@@ -27,6 +30,9 @@ const MyPageEdit = () => {
         confirmPassword: '',
     })
 
+    const [profileImage, setProfileImage] = useState(user?.memberProfileImage ||'/img/profile/default-profile.svg');
+    const [profileFile, setProfileFile] = useState(null);
+    const [isUploading, setUploading] = useState(false);
     const [validation, setValidation] = useState({
         memberPhone: true,
         newPassword: true,
@@ -110,9 +116,6 @@ const MyPageEdit = () => {
         }
     fetchMypageEdit(axios, formData, navigate, setIsSubmitting);
     }
-
-
-
     const handleAddressSearch = () => {
         new window.daum.Postcode({
             oncomplete: function (data) {
@@ -130,16 +133,16 @@ const MyPageEdit = () => {
                     memberAddress: addr
                 }))
 
-             /*
-              코드를
-              document.getElementById('postcode').value = data.zonecode;
-              document.getElementById('address').value = addr;
-              리액트에서는
-              memberPostCode : data.zonecode,
-              memberAddress: addr
-                    사용한다.
+                /*
+                 코드를
+                 document.getElementById('postcode').value = data.zonecode;
+                 document.getElementById('address').value = addr;
+                 리액트에서는
+                 memberPostCode : data.zonecode,
+                 memberAddress: addr
+                       사용한다.
 
-              */
+                 */
                 document.getElementById("detailAddress")?.focus();
             }
         }).open();
@@ -151,6 +154,65 @@ const MyPageEdit = () => {
             navigate("/mypage");
         }
     };
+    // 프로필 이미지 클릭 시 파일 선택
+    const handleProfileClick = () => {
+        fileInputRef.current?.click();
+        // 새로고침하여, 프로필이미지 초기화 되는 것이 아니라, 현재상태를 유지한 채로 클릭을 진행한다.
+    }
+    // 프로필 이미지 파일 선택
+    const handleProfileChange = async  (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+
+        // 이미지 파일인지 확인 이미지 파일이 아닌게 맞을경우
+        if(!file.type.startsWith("image/")){
+            alert("이미지 파일만 업로드 가능합니다.");
+            return;
+        }
+
+        // 파일 크기 확인 (5MB)
+        if(file.size > 5 * 1024 * 1024) {
+            alert("파일 크기는 5MB 를 초과할 수 없습니다.");
+            return;
+        }
+
+        // 미리보기 표기
+        const reader = new FileReader();
+        reader.onloadend = (e) => {
+            setProfileImage(e.target.result);
+        };
+        reader.readAsDataURL(file);
+        // 파일 저장
+        setProfileFile(file);
+        await  uploadProfileImage(file);
+    }
+    const uploadProfileImage = async (file) => {
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("memberEmail", user.memberEmail);
+            const res = await  axios.post('/api/member/profile-image', formData, {
+                headers: {
+                    'Content-Type':'multipart/form-data'
+                }
+            });
+
+            if(res.data.success === true) {
+                alert("프로필 이미지가 업데이트 되었습니다.");
+                setProfileImage(res.data.imageUrl);
+                //updateUser(useAuth 또한 업데이트 진행)
+            }
+        }catch (error) {
+            alert(error);
+            // 실패 시 원래 이미지로 복구
+            setProfileImage(user?.memberProfileImage ||'/static/img/default-profile.svg');
+        } finally {
+            setUploading(false);
+        }
+    }
+
+
     return (
         <div className="page-container">
             <h1>회원정보 수정</h1>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <!-- 배경 원 (연한 회색) -->
+  <circle cx="150" cy="150" r="150" fill="#e0e0e0"/>
+  
+  <!-- 사람 머리 (더 진한 회색) -->
+  <circle cx="150" cy="110" r="50" fill="#9e9e9e"/>
+  
+  <!-- 배경 원으로 몸통 아래 잘라내기 -->
+  <defs>
+    <clipPath id="circle-clip">
+      <circle cx="150" cy="150" r="150"/>
+    </clipPath>
+  </defs>
+  
+  <!-- 사람 몸통 (더 진한 회색) - 클리핑으로 아래 부분만 잘림 -->
+  <ellipse cx="150" cy="240" rx="80" ry="90" fill="#9e9e9e" clip-path="url(#circle-clip)"/>
+</svg>
