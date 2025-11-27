@@ -104,7 +104,7 @@ const Signup = () => {
         setTimer({min:4, sec:59, active:false});
         // 백엔드 응답 결과를 res 라는 변수이름에 담아두기
        const res =  await  axios.post('/api/email/signup',
-                            formData.memberEmail, // form 데이터에서 email 전달
+                            formData.memberEmail,
                     {
                         headers: {'Content-Type': 'application/json'} // 글자형태로 전달설정
                     }
@@ -158,12 +158,8 @@ const Signup = () => {
                     authKey: formData.authKey
                 }                             // header 에 글자형태만 전달한다, 이미지나 파일데이터도 전달한다와 같은 구문을 작성해야할 경우 3번도 필요
             )
-            // console.log("r.data : ",r.data);
-            // if 와 else 는 백엔드와 무사히 연결되었다는 전제하에
-            // 백엔드에서 특정데이터의 성공유무 확인일뿐,
-            // 프론트엔드와 백엔드가 제대로 연결되어있는지 확인할 수 없다.
-            // 과제 : if (r.data && r.data !== null) { ->   응답코드 1일 경우에만 인증되도록 수정
-            if (r.data.success === true) {
+           // if (r.data.success === true) {
+            if (r.data === 1) {
                 clearInterval(timerRef.current);
                 setTimer({min:0,sec: 0,active: false});
                 setMessage(prev => ({...prev, authKey: '인증되었습니다.'}));
@@ -176,10 +172,7 @@ const Signup = () => {
         } catch (err) { // 백엔드연결시도를 실패했을경우
             console.log("인증확인실패 : ",err);
             alert("인증 확인 중 서버에 연결되지 않는 오류가 발생했습니다.");
-
         }
-
-
     }
 
 
