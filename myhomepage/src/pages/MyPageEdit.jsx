@@ -30,7 +30,7 @@ const MyPageEdit = () => {
         confirmPassword: '',
     })
 
-    const [profileImage, setProfileImage] = useState(user?.memberProfileImage ||'/img/profile/default-profile.svg');
+    const [profileImage, setProfileImage] = useState(user?.memberProfileImage ||'/static/img/profile/default_profile_image.svg');
     const [profileFile, setProfileFile] = useState(null);
     const [isUploading, setUploading] = useState(false);
     const [validation, setValidation] = useState({
