@@ -3,6 +3,8 @@ import {useState} from "react";
 import axios from "axios";
 import {handleInputChange} from "../service/commonService";
 
+// 상품 이미지 업로드 변경
+// profileImage -> imageUrl 을 이용해서 상품 업로드시 제품 미리보기
 
 const ProductUpload = () => {
     const navigate = useNavigate();

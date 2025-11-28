@@ -192,7 +192,7 @@ const MyPageEdit = () => {
             const formData = new FormData();
             formData.append("file", file);
             formData.append("memberEmail", user.memberEmail);
-            const res = await  axios.post('/api/member/profile-image', formData, {
+            const res = await  axios.post('/api/auth/profile-image', formData, {
                 headers: {
                     'Content-Type':'multipart/form-data'
                 }
