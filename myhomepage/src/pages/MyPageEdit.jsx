@@ -7,15 +7,28 @@ import axios from "axios";
 
 const MyPageEdit = () => {
     const navigate = useNavigate();
-    const {user, isAuthenticated , updateUser} = useAuth();
+    const {user, isAuthenticated , updateUser, loading} = useAuth();
     // 페이지 리랜더링이 될 때 현재 데이터를 그대로 유지하기위해 사용
     // 새로고침되어도 초기값으로 돌아가는 것이 아니라 현재 상태를 그대로 유지
     const fileInputRef = useRef(null);
     useEffect(() => {
-        if(!isAuthenticated) {
-            navigate("/login");
+        // 로딩중이 종료되었고, 백엔드에서 로그인한 결과가 존재하지 않는게 맞다면
+        if (!loading && !isAuthenticated)  navigate("/login");
+    },[loading, isAuthenticated, navigate]);
+
+    useEffect(() =>{
+        if(user) {
+            setFormData(prev => ({
+                ...prev,
+                memberName: user.memberName || '',
+                memberEmail: user.memberEmail || '',
+                memberPhone: user.memberPhone || '',
+                memberAddress: user.memberAddress || ''
+            }));
+            setProfileFile(getProfileImageUrl(user.memberProfileImage));
         }
-    },[]);
+    })
+
     const [formData, setFormData] = useState({
         memberName: '',
         memberEmail: '',
