@@ -34,7 +34,6 @@ const Signup = () => {
         password : '영어, 숫자 6~20글자 사이로 입력해주세요.',
         fullname : "한글 2~5자 작성"
     })
-
     const [checkObj, setCheckObj] = useState({
         memberName:false,
         memberEmail:false,
@@ -42,13 +41,15 @@ const Signup = () => {
         memberPwConfirm:false,
         authKey:false
     })
-
     const [timer, setTimer] = useState({
         min:4,
         sec:59,
         active:false
     });
     const timerRef =useRef(null);
+    const [profileImage, setProfileImage] = useState(null);
+    const [profilePreview, setProfilePreview] = useState('/static/img/profile/default_profile_image.svg');
+    const fileInputRef = useRef(null);
 
 
     // 초의 경우 지속적으로 1초마다 시간을 줄이고, 0분 0초 일 경우 인증 실패 처리
@@ -119,10 +120,8 @@ const Signup = () => {
         setTimer({min:4, sec:59, active:true});
         // 백엔드 응답 결과를 res 라는 변수이름에 담아두기
        const res =  await  axios.post('/api/email/signup',
-                            formData.memberEmail,
-                    {
-                        headers: {'Content-Type': 'application/json'} // 글자형태로 전달설정
-                    }
+           {email: formData.memberEmail},
+           {headers: {'Content-Type': 'application/json'}} // 글자형태로 전달설정
         );
        /*
            @Override
@@ -190,14 +189,6 @@ const Signup = () => {
         }
     }
 
-
-
-
-
-
-
-
-
     // js 기능 추가
     /*
     동기   : 순차적으로 진행 은행 번호표 와 같이 순서대로.. 진행
@@ -221,9 +212,7 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         // 제출관련 기능 설정
         e.preventDefault();
-        await fetchSignup(axios,formData);
-
-
+        await fetchSignup(axios, formData, profileImage);
         // axios.post
         // 백엔드는 무사히 저장되지만 프론트엔드에서 회원가입 실패가 뜬다.
         // 이를 해결하자
@@ -247,10 +236,83 @@ const Signup = () => {
         handleInputChange(e,setFormData);
         // 개발자가 원하는 정규식이나, 입력형식에 일치하게 작성했는지 체크
     }
+
+    const handleProfileImageChange = (e) => {
+        /*
+        e.target.value는 프론트엔드에서 클라이언트가 작성하거나 선택한 text 글자 형태의 값을 js로 가져올 때 사용하고,
+        파일은 value가 아닌 files를 사용하며, 파일 선택은 기본적으로 한 개 이상이기 때문에 files를 사용하며,
+        idx 0번부터 저장하지만, 프로필 이미지는 하나씩만 등록하기 때문에 files[0]를 사용한다.
+         */
+        const selectedImage = e.target.files[0];
+        if(selectedImage) {
+            // 파일 유효성 검사
+            if(!selectedImage.type.startsWith("image/")) {
+                alert("이미지 파일만 업로드 가능합니다.");
+                return;
+            }
+            if(selectedImage.size > 5 * 1024 * 1024) {
+                alert("파일 크기는 5MB 를 초과할 수 없습니다.");
+                return;
+            }
+            setProfileImage(selectedImage);
+            // 미리보기 이미지 생성
+            const reader = new FileReader();
+            reader.onloadend = (e) => {
+                setProfilePreview(reader.result);
+            };
+            reader.readAsDataURL(selectedImage);
+        }
+    }
+
+    const handleRemoveProfileImage = () => {
+        setProfileImage(null);
+        setProfilePreview("/static/img/profile/default_profile_image.svg");
+        if(fileInputRef.current) {
+            // 새로고침하지 않아도 저장해놓은 파일 데이터 지우기
+            fileInputRef.current.value = "";
+        }
+    }
+
     return(
         <div className="page-container">
-
             <form onSubmit={handleSubmit}>
+                <div className="profile-image-section">
+                    <label htmlFor="memberProfile">
+                        프로필 이미지
+                    </label>
+                    <div className="profile-image-container"
+                         onClick={() => fileInputRef.current?.click()}
+                    >
+
+                        <img src={profilePreview}
+                             alt="프로필 미리보기"
+                             className="profile-image"
+                        />
+                        <div className="profile-image-overlay">
+                            이미지 선택
+                        </div>
+                    </div>
+                    <input type="file"
+                           accept="image/*"
+                           onChange={handleProfileImageChange}
+                           id="memberProfile"
+                           name="memberProfile"
+                           style={{display: 'none'}}
+                           ref={fileInputRef}
+
+                    />
+
+                    {profileImage && (
+                        <button type="button"
+                                className="btn-reset"
+                                onClick={handleRemoveProfileImage}
+                        >이미지 제거</button>
+                    )}
+                    <span className="form-hint">
+                        * 이미지를 선택하지 않으면 기본 프로필 이미지가 설정됩니다.
+                    </span>
+                </div>
+
 
                 <label htmlFor="memberEmail">
                     <span className="required">*</span> 아이디(이메일)

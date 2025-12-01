@@ -22,6 +22,7 @@ const MyPageEdit = () => {
         newPassword: '',
         currentPassword: '',
         confirmPassword: '',
+        memberProfileImage: ''
     })
     const [profileImage, setProfileImage] = useState('');
     const [profileFile, setProfileFile] = useState(null);
@@ -51,7 +52,8 @@ const MyPageEdit = () => {
                 memberName: user.memberName || '',
                 memberEmail: user.memberEmail || '',
                 memberPhone: user.memberPhone || '',
-                memberAddress: user.memberAddress || ''
+                memberAddress: user.memberAddress || '',
+                memberProfileImage: user.memberProfileImage
             }));
             // 프로필 이미지 설정
             setProfileImage(getProfileImageUrl(user));
@@ -254,7 +256,6 @@ const MyPageEdit = () => {
                            onChange={handleProfileChange}
                            accept="image/*"
                            style={{ display: 'none' }}
-                           multiple
                     />
                     <span className="form-hint">이미지를 클릭하여 변경할 수 있습니다.(최대 5MB)</span>
                 </div>
@@ -293,9 +294,8 @@ const MyPageEdit = () => {
                     <span className="required">*</span>핸드폰 번호
                     <input type="text"
                            name="memberPhone"
-                           value={user?.memberPhone}
+                           value={formData.memberPhone}
                            onChange={handleCheckChange}
-
                     />
                 </label>
                 <label>

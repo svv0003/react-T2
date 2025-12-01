@@ -30,7 +30,7 @@ export const API_URLS = {
 // 마이페이지 수정      = fetchMypageEdit
 
 
-export const fetchSignup = async (axios, formData) => {
+export const fetchSignup = async (axios, formData, profileImage) => {
     // 필수 항목 체크
     if (!formData.memberName) {
         alert('이름을 입력해주세요.')
@@ -45,14 +45,21 @@ export const fetchSignup = async (axios, formData) => {
         memberEmail: formData.memberEmail,
         memberPassword: formData.memberPw,
     }
+    if(profileImage) {
+        signupData.append("profileImage", profileImage);
+    }
     try {
-        const res = await axios.post(API_URLS.AUTH + "/signup", signupData);
-        if (res.data === "success" || res.status === 200) {
+        const res = await axios.post(API_URLS.AUTH + "/signup", signupData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        if (res.data.success === true || res.status === 200) {
             console.log("res.data   : ", res.data);
             console.log("res.status : ", res.status);
             alert('회원가입이 완료되었습니다.');
             window.location.href = "/";
-        } else if (res.data === "duplicate")
+        } else if (res.data.message === "duplicate")
             alert("이미 가입된 이메일 입니다.");
         else
             alert("회원가입에 실패하였습니다.");
@@ -69,7 +76,6 @@ export const fetchLoginCheck = (axios, setUser, setLoading) => {
     })
         .then(res => {
             //    console.log("로그인 상태 확인 응답 : ", res.data);
-
             setUser(res.data.user);
         })
         .catch(err => {
@@ -79,7 +85,7 @@ export const fetchLoginCheck = (axios, setUser, setLoading) => {
         .finally(() => setLoading(false))
 }
 
-export const fetchMypageEdit = (axios, formData, navigate, setIsSubmitting) => {
+export const fetchMypageEdit = async (axios, formData, navigate, setIsSubmitting) => {
     // 수정내용 키:데이터를 모두 담아갈 변수이름
     const updateData = {
         memberName: formData.memberName,
@@ -90,22 +96,23 @@ export const fetchMypageEdit = (axios, formData, navigate, setIsSubmitting) => {
         currentPassword: formData.currentPassword || null,
     }
     try {
-        const res = axios.put(API_URLS.AUTH + "/update", updateData);
-        if (res.data === "success" || res.status === 200) {
+        const res = await axios.put(API_URLS.AUTH + "/update", updateData);
+        if (res.data.success === true || res.status === 200) {
             alert("회원정보가 수정되었습니다.")
-        } else if(res.data ==="wrongPassword"){
+        } else if(res.data.message === "wrongPassword"){
             alert("현재 비밀번호가 일치하지 않습니다.")
         } else {
-            alert("회원정보 수정에  실패했습니다.")
+            alert("회원정보 수정에 실패했습니다.")
         }
     } catch (err) {
         alert("회원정보 수정 중 문제가 발생했습니다.")
     } finally {
         setIsSubmitting(false);
+        navigate("/mypage");
     }
 }
 
-export const fetchMypageEditWithProfile = (axios, formData, profileFile, navigate, setIsSubmitting) => {
+export const fetchMypageEditWithProfile = async (axios, formData, profileFile, navigate, setIsSubmitting) => {
     // 수정내용 키:데이터를 모두 담아갈 변수이름
     const updateData = {
         memberName: formData.memberName,
@@ -117,18 +124,16 @@ export const fetchMypageEditWithProfile = (axios, formData, profileFile, navigat
         memberProfileImage: profileFile,
     }
     try {
-        const res = axios.put(API_URLS.AUTH + "/update", updateData,{
+        const res = await axios.put(API_URLS.AUTH + "/update", updateData,{
             headers: {
                 'Content-Type':'multipart/form-data'
             },
             withCredentials: true
         });
-        if (res.data === "success" || res.status === 200) {
+        if (res.data.success === true || res.status === 200) {
             alert("회원정보가 수정되었습니다.")
-        } else if(res.data ==="wrongPassword"){
-            alert("현재 비밀번호가 일치하지 않습니다.")
         } else {
-            alert("회원정보 수정에  실패했습니다.")
+            alert("회원정보 수정에 실패했습니다.")
         }
     } catch (err) {
         alert("회원정보 수정 중 문제가 발생했습니다.")
