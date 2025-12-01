@@ -105,7 +105,6 @@ export const fetchMypageEdit = (axios, formData, navigate, setIsSubmitting) => {
     }
 }
 
-
 export const fetchMypageEditWithProfile = (axios, formData, profileFile, navigate, setIsSubmitting) => {
     // 수정내용 키:데이터를 모두 담아갈 변수이름
     const updateData = {
@@ -138,6 +137,17 @@ export const fetchMypageEditWithProfile = (axios, formData, profileFile, navigat
     }
 }
 
+
+export const getProfileImageUrl = (user) => {
+    if(!user?.memberProfileImage) return '/static/img/profile/default_profile_image.svg';
+    // memberProfileImage 가 전체 URL 인 경우
+    if(user.memberProfileImage.startsWith('http')) return user.memberProfileImage;
+    if(user.memberProfileImage.startsWith('/profile_images/')) {
+        return `${API_URL}${user.memberProfileImage}`;
+    }
+    // 파일명만 있는 경우
+    return `${API_URL}/profile_images/${user.memberProfileImage}`;
+}
 /***********************************************************
  제품 백엔드 관련 함수
  ***********************************************************/

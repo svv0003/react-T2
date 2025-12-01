@@ -5,6 +5,7 @@ import {useContext, useEffect} from "react";
 //         export = {useAuth} 사용할 수 있다.
 import AuthContext, {useAuth} from "../context/AuthContext";
 import {renderLoading} from "../service/commonService";
+import {getProfileImageUrl} from "../service/ApiService";
 // 마이페이지
 /*
 * 로그인 상태일 때만 접근 가능
@@ -44,16 +45,7 @@ const MyPage = () => {
     }
 
     // 이미지 url 생성 함수
-    const getProfileImageUrl = () => {
-        if(!user?.memberProfileImage) return '/static/img/profile/default_profile_image.svg';
-        // memberProfileImage 가 전체 URL 인 경우
-        if(user.memberProfileImage.startsWith('http')) return user.memberProfileImage;
-        if(user.memberProfileImage.startsWith('/profile_images/')) {
-            return `http://localhost:8085${user.memberProfileImage}`;
-        }
-        // 파일명만 있는 경우
-        return `http://localhost:8085/profile_images/${user.memberProfileImage}`;
-    }
+
     return(
         <div className="page-container">
             <h1>마이페이지</h1>
@@ -64,7 +56,7 @@ const MyPage = () => {
                         <div className="info-item">
                             <span className="info-label">프로필 이미지</span>
                             {/* 이미지 경로는 존재하지만 이미지 경로에 이미지가 존재하지 않을 경우 */}
-                                <img src={getProfileImageUrl() ||'/static/img/profile/default_profile_image.svg'}/>
+                                <img src={getProfileImageUrl(user) ||'/static/img/profile/default_profile_image.svg'}/>
                         </div>
 
                         <div className="info-item">
