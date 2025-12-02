@@ -132,8 +132,8 @@ const MyPageEdit = () => {
             }
 
         }
-    fetchMypageEdit(axios, formData, navigate, setIsSubmitting);
-    // fetchMypageEditWithProfile(axios, formData, profileFile,navigate, setIsSubmitting);
+        fetchMypageEdit(axios, formData, navigate, setIsSubmitting);
+        // fetchMypageEditWithProfile(axios, formData, profileFile,navigate, setIsSubmitting);
     }
     const handleAddressSearch = () => {
         new window.daum.Postcode({

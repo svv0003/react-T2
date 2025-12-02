@@ -4,12 +4,8 @@ import axios from "axios";
 import { formatDate, formatPrice, renderLoading} from "../service/commonService";
 import {deleteProduct, fetchProductDetail} from "../service/ApiService";
 
-/*
-
-과제 4
-재고가 10개 이상이면 개 글자를 뒤에 붙여주기
- */
 const ProductDetail = () => {
+    const defaultImg = '/static/img/default.png';
     const {id} = useParams(); //URL 에서 id 가져오기
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
@@ -49,7 +45,7 @@ const ProductDetail = () => {
                          alt={product.productName}
                     />
                     :
-                    <img src="/static/img/default.png"
+                    <img src={defaultImg}
                          alt="default"
                     />}
             </div>
@@ -126,7 +122,7 @@ const ProductDetail = () => {
                 <div className="product-detail-buttons">
                     <button
                         className="btn-edit"
-                        onClick={()=>navigate(`/products/edit/${id}`)}>
+                        onClick={()=>navigate(`/product/edit/${id}`)}>
                         수정
                     </button>
                     <button

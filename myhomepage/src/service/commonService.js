@@ -118,6 +118,57 @@ export const handleInputChange = (e, setFormData) => {
 }
 
 
+/**
+ *
+ * @param e
+ * onChange={handleChangeImage(e, setPreviewImage, setImageFile, setProduct)}           불가능
+ * onChange={(e) => handleChangeImage(e, setPreviewImage, setImageFile, setProduct)}    가능
+ * onChange={handleChangeImage(setPreviewImage, setImageFile, setProduct)}              가능
+ * jsx에서 e를 생략하고 작성 가능하다.
+ */
+// export const handleChangeImage = (e, setPreviewImage, setImageFile, setProduct) => {
+export const handleChangeImage = (setPreviewImage, setImageFile, setProduct) => (e) => {
+    /*
+    type=file은 이미지 이외에도 항시 1개 이상의 데이터를 가져오는 것이 기본 전제로 된 속성이다.
+    multipart 작성하지 않아 input에서 하나의 이미지만 가져온다 하더라도 항시 [0]번째 데이터를 가져온다고 작성해야 한다.
+     */
+    const firstImageFile = e.target.files[0];
+    if(firstImageFile) {
+        if(!firstImageFile.type.startsWith("image/")) {
+            alert("이미지만 가능합니다.");
+            e.target.value = ""; // 한 번더 안정적으로 input 내 데이터 제거
+            return;
+        }
+        const maxSize =  5 * 1024 * 1024
+        if(firstImageFile.size > maxSize) {
+            alert("파일 크기는 5MB 를 초과할 수 없습니다.");
+            e.target.value = ""; // 한 번더 안정적으로 input 내 데이터 제거
+            return;
+        }
+        /*
+        FileReader 라는 JS에 내장된 기능을 사용해서 파일 미리보기 생성한다.
+         */
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            /**
+             * FileReader를 만든 개발자가 target한 다음 value나 files[인덱스] 대신
+             * 가져온 것에 대한 결과라는 변수명을 사용하여 result 사용한다.
+             */
+            setPreviewImage(event.target.result);
+        };
+        /**
+         * URL에 존재하는 데이터를 reader에서 읽는다.
+         */
+        reader.readAsDataURL(firstImageFile);
+        setImageFile(firstImageFile);
+        setProduct( prev => ({
+            ...prev,
+            imageUrl: firstImageFile
+        }))
+    }
+}
+
+
 /***********************************************************
                 유효성 검사 함수
  ***********************************************************/

@@ -295,3 +295,8 @@ export const boardSave = async (axios, formData, navigate) => {
         throw error;
     }
 }
+
+
+export const updateProductDetail = async (formData, navigate) => {
+
+}

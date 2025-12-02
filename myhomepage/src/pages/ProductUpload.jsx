@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import axios from "axios";
-import {handleInputChange} from "../service/commonService";
+import {handleInputChange,handleChangeImage} from "../service/commonService";
 
 // 상품 이미지 업로드 변경
 // profileImage -> imageUrl 을 이용해서 상품 업로드시 제품 미리보기
@@ -17,7 +17,8 @@ const ProductUpload = () => {
         stockQuantity :'',
         description :'',
         manufacturer :'',
-        imageUrl :''
+        imageUrl :'',
+        isActive : 'Y'
     });
     const [formData, setFormData] = useState({
         productName :'',
@@ -40,51 +41,12 @@ const ProductUpload = () => {
     //  제품 업로드를 했을 때 제품이 무사히 업로드 되는지 확인
     const handleChange = (e) => {
         const {name, value} = e.target;
-        handleInputChange(e, setFormData);
+        handleInputChange(e, setProduct);
         // 입력 시 해당 필드의 에러 메세지 제거
         if(errors[name]) {
             setErrors(p => ({
                 ...p, [name]:''
             }));
-        }
-    }
-
-    const handleChangeImage = (e) => {
-        /*
-        type=file은 이미지 이외에도 항시 1개 이상의 데이터를 가져오는 것이 기본 전제로 된 속성이다.
-        multipart 작성하지 않아 input에서 하나의 이미지만 가져온다 하더라도 항시 [0]번째 데이터를 가져온다고 작성해야 한다.
-         */
-        const firstImageFile = e.target.files[0];
-        if(firstImageFile) {
-            if(!firstImageFile.type.startsWith("image/")) {
-                alert("이미지만 가능함");
-                return;
-            }
-            const maxSize =  5 * 1024 * 1024
-            if(firstImageFile.size > maxSize) {
-                alert("파일 크기는 5MB 를 초과할 수 없습니다.");
-                return;
-            }
-            /*
-            FileReader 라는 JS에 내장된 기능을 사용해서 파일 미리보기 생성한다.
-             */
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                /**
-                 * FileReader를 만든 개발자가 target한 다음 value나 files[인덱스] 대신
-                 * 가져온 것에 대한 결과라는 변수명을 사용하여 result 사용한다.
-                 */
-                setPreviewImage(event.target.result);
-            };
-            /**
-             * URL에 존재하는 데이터를 reader에서 읽는다.
-             */
-            reader.readAsDataURL(firstImageFile);
-            setImageFile(firstImageFile);
-            setProduct( prev => ({
-                ...prev,
-                imageUrl: firstImageFile
-            }))
         }
     }
 
@@ -108,10 +70,9 @@ const ProductUpload = () => {
         }
         setErrors(newErrors);
         /**
-         * 에러 값이 모두 다 데이터 0일때만 통과하고, 에러 값이 존재하면 반환?
+         * 에러 값이 모두 다 데이터 0일때만 통과하고, 에러 값이 존재하면 등록 불가 처리한다.
          */
         return Object.keys(newErrors).length === 0;
-
     }
 
     // 폼 제출 핸들러
@@ -121,7 +82,6 @@ const ProductUpload = () => {
         if(!validateForm()){
             return;
         }
-
      */
         setLoading(true);
         // 백엔드 연결 시도
@@ -140,14 +100,12 @@ const ProductUpload = () => {
                 {type: 'application/json'}
             );
             uploadFormData.append('product', productBlob);
-
             /**
              * 이미지 파일이 있다면 추가한다.
              */
             if(imageUrl) {
-                uploadFormData.append('imageUrl, imageUrl');
+                uploadFormData.append('imageFile', imageUrl);
             }
-
             const r = await  axios.post(
                 'http://localhost:8085/api/product', uploadFormData, {
                     headers : {
@@ -277,6 +235,7 @@ const ProductUpload = () => {
                             <span className="error">{errors.stockQuantity}</span>
                         )}
                     </div>
+
                     <div className="form-group">
                         <label htmlFor="manufacturer">
                             제조사
@@ -291,43 +250,68 @@ const ProductUpload = () => {
                             maxLength="100"
                         />
                     </div>
+
                     <div className="form-group">
-                        <label htmlFor="imageUrl"
-                               className="btn-upload">
-                            이미지 URL
+                        <label>
+                            판매 상태<span className="required">*</span>
+                        </label>
+                        <label className="radio-label">
+                            <input
+                                type="radio"
+                                name="isActive"
+                                value="Y"
+                                checked={product.isActive === "Y"}
+                                onChange={handleChange}
+                            />
+                            <span>판매중</span>
+                        </label>
+                        <label className="radio-label">
+                            <input
+                                type="radio"
+                                name="isActive"
+                                value="N"
+                                checked={product.isActive === "N"}
+                                onChange={handleChange}
+                            />
+                            <span>판매중지</span>
+                        </label>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="imageUrl" className="btn-upload">
+                            이미지 업로드
                         </label>
                         <input
-                            // type="url"
                             type="file"
                             id="imageUrl"
                             name="imageUrl"
-                            onChange={handleChangeImage}
+                            onChange={handleChangeImage(setPreviewImage, setImageFile, setProduct)}
                             accept="image/*"
                             style={{ display: 'none' }}
                         />
+                        {/**/}
                         <small className="form-hint">
-                            {/*상품 이미지의 URL 을 입력하세요.*/}
-                            상품 이미지를 업로드하세요. (최대 5MB 이미지 파일만 가능합니다.)
+                            상품 이미지를 업로드 하세요.(최대 5MB 이미지 파일만 가능)
                         </small>
-                        {previewImage && (
+                        {previewImage &&(
                             <div className="image-preview">
                                 <img src={previewImage}
                                      alt={previewImage}
                                      style={{
-                                         maxWidth: '300px',
-                                         maxHeight: '300px',
-                                         marginTop: '10px',
-                                         border: '1px solid #ddd',
-                                         borderRadius: '5px',
-                                         paddingTop: '5px'
-                                    }}
+                                         maxWidth:'300px',
+                                         maxHeight:'300px',
+                                         marginTop:'10px',
+                                         border:'1px solid #ddd',
+                                         borderRadius:'5px',
+                                         paddingTop:'5px'
+                                     }}
                                 />
                             </div>
                         )}
                     </div>
                     <div className="form-group">
                         <label htmlFor="description">
-                           상품설명
+                            상품설명
                         </label>
                         <textarea
                             id="description"
@@ -339,8 +323,8 @@ const ProductUpload = () => {
                         />
                     </div>
                     <div className="form-buttons">
-                        <button type="submit" 
-                                className="btn-submit" 
+                        <button type="submit"
+                                className="btn-submit"
                                 disabled={loading}>
                             {loading ? '등록 중...' : '등록' }
                         </button>
