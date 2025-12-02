@@ -17,20 +17,30 @@ const ProductUpload = () => {
         stockQuantity :'',
         description :'',
         manufacturer :'',
-        imageUrl :'',
+        imageUrl :''
     });
+    const [formData, setFormData] = useState({
+        productName :'',
+        productCode :'',
+        category :'',
+        price :'',
+        stockQuantity :'',
+        description :'',
+        manufacturer :''
+    })
+    const [imageFile, setImageFile] = useState(null);
     const [errors, setErrors] = useState({});
-
     const categories = [
         '전자제품','가전제품','의류','식품','도서','악세사리','스포츠','완구','가구','기타'
     ]
+    const [previewImage, setPreviewImage] = useState(null);
 
     //  기존 변수명칭은 모두 setFormData 사용
     //  setProduct 변수명칭 사용
     //  제품 업로드를 했을 때 제품이 무사히 업로드 되는지 확인
     const handleChange = (e) => {
         const {name, value} = e.target;
-        handleInputChange(e, setProduct);
+        handleInputChange(e, setFormData);
         // 입력 시 해당 필드의 에러 메세지 제거
         if(errors[name]) {
             setErrors(p => ({
@@ -38,12 +48,70 @@ const ProductUpload = () => {
             }));
         }
     }
+
+    const handleChangeImage = (e) => {
+        /*
+        type=file은 이미지 이외에도 항시 1개 이상의 데이터를 가져오는 것이 기본 전제로 된 속성이다.
+        multipart 작성하지 않아 input에서 하나의 이미지만 가져온다 하더라도 항시 [0]번째 데이터를 가져온다고 작성해야 한다.
+         */
+        const firstImageFile = e.target.files[0];
+        if(firstImageFile) {
+            if(!firstImageFile.type.startsWith("image/")) {
+                alert("이미지만 가능함");
+                return;
+            }
+            const maxSize =  5 * 1024 * 1024
+            if(firstImageFile.size > maxSize) {
+                alert("파일 크기는 5MB 를 초과할 수 없습니다.");
+                return;
+            }
+            /*
+            FileReader 라는 JS에 내장된 기능을 사용해서 파일 미리보기 생성한다.
+             */
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                /**
+                 * FileReader를 만든 개발자가 target한 다음 value나 files[인덱스] 대신
+                 * 가져온 것에 대한 결과라는 변수명을 사용하여 result 사용한다.
+                 */
+                setPreviewImage(event.target.result);
+            };
+            /**
+             * URL에 존재하는 데이터를 reader에서 읽는다.
+             */
+            reader.readAsDataURL(firstImageFile);
+            setImageFile(firstImageFile);
+            setProduct( prev => ({
+                ...prev,
+                imageUrl: firstImageFile
+            }))
+        }
+    }
+
     // 폼 유효성 검사
     const validateForm = () => {
         const newErrors = {};
         if(!product.productName.trim()){
             newErrors.productName='상품명을 입력하세요.';
         }
+        if(!product.productCode.trim()){
+            newErrors.productCode='상품코드를 입력하세요.';
+        }
+        if(!product.category.trim()){
+            newErrors.category='카테고리를 입력하세요.';
+        }
+        if(!product.price || product.price <= 0){
+            newErrors.price='가격을 입력하세요.';
+        }
+        if(!product.stockQuantity || product.stockQuantity <= 0){
+            newErrors.stockQuantity='재고 수량을 입력하세요.';
+        }
+        setErrors(newErrors);
+        /**
+         * 에러 값이 모두 다 데이터 0일때만 통과하고, 에러 값이 존재하면 반환?
+         */
+        return Object.keys(newErrors).length === 0;
+
     }
 
     // 폼 제출 핸들러
@@ -58,8 +126,34 @@ const ProductUpload = () => {
         setLoading(true);
         // 백엔드 연결 시도
         try{
+            const uploadFormData = new FormData();
+            /**
+             * product에서 imageUrl을 제외한 나머지 데이터만 productData 변수명 내에 데이터 전달한다.
+             */
+            const {imageUrl, ...productData} = product;
+            /**
+             * product 정보를 JSON Blob으로 추가한다.
+             * Blob은 MySQL에 없는 ORACLE 개념이다.
+             */
+            const productBlob = new Blob(
+                [JSON.stringify(productData)],
+                {type: 'application/json'}
+            );
+            uploadFormData.append('product', productBlob);
+
+            /**
+             * 이미지 파일이 있다면 추가한다.
+             */
+            if(imageUrl) {
+                uploadFormData.append('imageUrl, imageUrl');
+            }
+
             const r = await  axios.post(
-                'http://localhost:8085/api/product',product
+                'http://localhost:8085/api/product', uploadFormData, {
+                    headers : {
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                }
             );
             if(r.data.success){
                 alert(r.data.message);
@@ -83,6 +177,8 @@ const ProductUpload = () => {
             navigate("/");
         }
     }
+
+
 
     return(
         <div className="page-container">
@@ -181,7 +277,6 @@ const ProductUpload = () => {
                             <span className="error">{errors.stockQuantity}</span>
                         )}
                     </div>
-
                     <div className="form-group">
                         <label htmlFor="manufacturer">
                             제조사
@@ -197,20 +292,38 @@ const ProductUpload = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="imageUrl">
+                        <label htmlFor="imageUrl"
+                               className="btn-upload">
                             이미지 URL
                         </label>
                         <input
-                            type="url"
+                            // type="url"
+                            type="file"
                             id="imageUrl"
                             name="imageUrl"
-                            value={product.imageUrl}
-                            onChange={handleChange}
-                            maxLength="500"
+                            onChange={handleChangeImage}
+                            accept="image/*"
+                            style={{ display: 'none' }}
                         />
                         <small className="form-hint">
-                            상품 이미지의 URL 을 입력하세요.
+                            {/*상품 이미지의 URL 을 입력하세요.*/}
+                            상품 이미지를 업로드하세요. (최대 5MB 이미지 파일만 가능합니다.)
                         </small>
+                        {previewImage && (
+                            <div className="image-preview">
+                                <img src={previewImage}
+                                     alt={previewImage}
+                                     style={{
+                                         maxWidth: '300px',
+                                         maxHeight: '300px',
+                                         marginTop: '10px',
+                                         border: '1px solid #ddd',
+                                         borderRadius: '5px',
+                                         paddingTop: '5px'
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                     <div className="form-group">
                         <label htmlFor="description">

@@ -2088,3 +2088,65 @@ button.loading::after {
         height: 120px;
     }
 }
+
+
+/*****************************************************
+상품 업로드 이미지
+ */
+
+
+.btn-upload {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.btn-upload:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-upload:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(52, 152, 219, 0.2);
+}
+
+.image-preview {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-preview img {
+    max-width: 300px;
+    max-height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .btn-upload {
+        width: 100%;
+        padding: 14px 24px;
+        font-size: 16px;
+    }
+
+    .image-preview img {
+        max-width: 100%;
+        max-height: 250px;
+    }
+}
