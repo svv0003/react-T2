@@ -284,11 +284,14 @@ export const fetchBoardDetail = async (axios, id, setBoard, navigate, setLoading
 export const boardSave = async (axios, formData, navigate) => {
 
     try {
-        const res = await axios.post(`${API_URLS.BOARD}`, formData);
+        const res = await axios.post(`${API_URLS.BOARD}`, formData,
+            {headers : {
+                    'Content-Type' : 'multipart/form-data'
+                }}
+        );
         alert("글이 성공적으로 작성되었습니다.");
         navigate("/board");
         return res;
-
     } catch (error) {
         alert("글 작성 중 문제가 발생했습니다.");
         console.error(error);
@@ -297,6 +300,3 @@ export const boardSave = async (axios, formData, navigate) => {
 }
 
 
-export const updateProductDetail = async (formData, navigate) => {
-
-}

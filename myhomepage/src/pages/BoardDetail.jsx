@@ -33,6 +33,11 @@ const BoardDetail = () => {
                 <span>조회수 : {board.viewCount}</span>
                 <span>작성일 : {board.createdAt}</span>
             </div>
+            <div className="image-preview">
+                <img src={board.boardImage}
+                     alt="게시물 사진"
+                />
+            </div>
             <div className="board-detail-content">
                 {board.content}
             </div>
